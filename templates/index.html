@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Doctor</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container"style="text-align:center;">
+        <h1>Smart Doctor</h1>
+        <hr>
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <input type="text" id="input" class="form-control" placeholder="Enter your disease name or problem, Then I can suggest you..." onkeypress="if(event.keyCode==13) send()">
+                        </div>
+                        <button class="btn btn-primary float-right" onclick="send()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 offset-md-3 mt-4">
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="list-group" id="chat"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 offset-md-3 mt-4">
+            <button class="btn btn-danger btn-block" onclick="deleteChat()">Delete Conversation History</button>
+        </div>
+    </div>
+    <script>
+        function send() {
+            var input = document.getElementById("input").value;
+            document.getElementById("input").value = "";
+            var chat = document.getElementById("chat");
+            var user = document.createElement("li");
+            user.className = "list-group-item list-group-item-primary";
+            user.appendChild(document.createTextNode("You: " + input));
+            chat.appendChild(user);
+            var bot = document.createElement("li");
+            bot.className = "list-group-item list-group-item-secondary";
+            bot.appendChild(document.createTextNode("Smart Doctor: " + "Loading..."));
+            chat.appendChild(bot);
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    bot.innerHTML = "Smart Doctor: " + this.responseText;
+                }
+            };
+            xhttp.open("GET", "/get?msg=" + input, true);
+            xhttp.send();
+        }
+
+        function deleteChat() {
+            var chat = document.getElementById("chat");
+            chat.innerHTML = "";
+        }
+    </script>
+</body>
+</html>
